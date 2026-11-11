@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payinnov · Paiement XRP (MVP testnet)</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="card">
+    <header>
+      <h1>Payinnov</h1>
+      <span class="badge">XRPL testnet</span>
+    </header>
+
+    <!-- Étape 1 : la commande -->
+    <section>
+      <label for="amount">Montant à payer (XRP)</label>
+      <input id="amount" type="number" min="0.000001" step="0.01" value="10" />
+      <p class="muted">Commande n° <strong id="order-id">…</strong></p>
+      <p class="muted">Marchand : <code id="merchant"></code></p>
+    </section>
+
+    <!-- Étape 2 : connecter le wallet du client -->
+    <section>
+      <button id="connect-btn">Connecter mon wallet</button>
+      <p id="account" class="muted"></p>
+    </section>
+
+    <!-- Étape 3 : payer -->
+    <section>
+      <button id="pay-btn" disabled>Payer</button>
+    </section>
+
+    <!-- Résultat -->
+    <section id="status" class="status"></section>
+  </main>
+
+  <!-- Composant fourni par XRPL Connect : fenêtre de choix du wallet + QR code -->
+  <xrpl-wallet-connector id="wallet-connector" primary-wallet="xaman"></xrpl-wallet-connector>
+
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
