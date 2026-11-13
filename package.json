@@ -1,12 +1,14 @@
 {
   "name": "payinnov-xrpl-mvp",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "trustline": "node --env-file=.env scripts/trustline.mjs",
+    "test": "node scripts/test-logic.mjs"
   },
   "dependencies": {
     "xrpl": "^4.0.0",

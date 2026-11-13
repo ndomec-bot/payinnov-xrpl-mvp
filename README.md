@@ -67,3 +67,61 @@ Ouvre http://localhost:5173 dans ton navigateur.
 - Le parcours TPE.
 
 Ce sont les étapes suivantes.
+
+---
+
+## Nouveau : payer en RLUSD (testnet)
+
+RLUSD est le stablecoin dollar de Ripple. Pour en recevoir, un compte XRPL doit d'abord
+ouvrir une **ligne de confiance** vers l'émetteur. Le marchand et le client doivent le faire, une seule fois.
+Chaque ligne de confiance bloque 0,2 XRP de réserve sur le compte.
+
+1. Copie les nouveaux fichiers dans ton dossier `payinnov-xrpl-mvp` (garde ton `.env`).
+2. Ouvre ton `.env` et ajoute ces lignes :
+
+   ```
+   VITE_NETWORK=testnet
+   MERCHANT_SECRET=le_secret_testnet_du_compte_marchand
+   ```
+
+   Le secret commence par `s`. C'est celui que le faucet t'a donné avec l'adresse du marchand.
+3. Dans le terminal : `npm install` puis `npm test`. Tu dois lire « Tous les tests passent. »
+4. Active RLUSD côté marchand : `npm run trustline`
+5. Lance la page : `npm run dev`, puis ouvre http://localhost:5173
+6. Choisis la devise **RLUSD**, connecte ton wallet client.
+7. Clique sur **Activer RLUSD dans mon wallet** et valide dans Xaman.
+8. Va sur https://tryrlusd.com/, colle l'adresse du compte client, demande des RLUSD de test.
+9. Reviens sur la page, clique sur **Vérifier à nouveau**, puis **Payer**.
+
+La page confirme le paiement seulement si le registre montre du RLUSD du bon émetteur, au bon montant.
+
+## Passer au réseau principal (argent réel)
+
+À faire seulement quand XRP et RLUSD passent sur le testnet.
+
+1. **Un compte marchand réel.** Crée-le dans Xaman. Il doit contenir au moins 1 XRP de réserve, plus 0,2 XRP pour RLUSD, plus de quoi payer les frais. Garde sa phrase secrète hors ligne.
+2. **Active RLUSD sur ce compte depuis Xaman** (ajout de l'actif RLUSD, émetteur `rMxCKbEDwqr76QuheSUMdEGf4B9xJ8m5De`). Vérifie l'émetteur caractère par caractère. Le script `npm run trustline` refuse le réseau principal : un vrai secret ne s'écrit pas dans un fichier.
+3. **Modifie le `.env`** :
+
+   ```
+   VITE_NETWORK=mainnet
+   VITE_MERCHANT_ADDRESS=adresse_du_compte_marchand_réel
+   VITE_MAX_AMOUNT=5
+   MERCHANT_SECRET=
+   ```
+
+   Vide la ligne `MERCHANT_SECRET`.
+4. **Bascule Xaman sur le réseau principal** (côté client aussi).
+5. Relance `npm run dev`. Le bandeau rouge « Réseau principal · argent réel » doit s'afficher.
+6. **Premier paiement : 1 XRP.** Vérifie la transaction sur l'explorateur. Puis 1 RLUSD.
+
+Le fichier `.env` ne va jamais sur GitHub. Le fichier `.gitignore` l'exclut déjà.
+
+### Ce qui manque encore pour de vrais marchands
+
+Ce MVP vérifie le paiement dans le navigateur. Pour la production, il faut :
+
+- un serveur qui crée la commande et vérifie le paiement (le navigateur du client ne peut pas être la preuve) ;
+- un numéro de commande unique venant de ta base, pas tiré au hasard ;
+- une mise en ligne en HTTPS, avec l'adresse déclarée dans ton application Xaman ;
+- ton propre accès au registre plutôt qu'un serveur public.
